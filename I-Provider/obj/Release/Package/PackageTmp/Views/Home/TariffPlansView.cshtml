@@ -1,0 +1,82 @@
+﻿@using I_Provider.DAL.Entities
+@model System.Collections.Generic.IEnumerable<TariffPlan>
+@{
+    ViewBag.Title = "Тарифы";
+}
+<div class="sorting-bar">
+    <div class="btn-group" role="group">
+        @if ((string)Session["sort"] == "name")
+        {<a class="btn prd-btn sorting-btn btn-active" href="/Home/SortByName">Имя</a> }
+        else
+        { <a class="btn prd-btn sorting-btn" href="/Home/SortByName">Имя</a>}
+        @if (Session["sort"] == null)
+        {<a class="btn prd-btn sorting-btn btn-active" href="/Home/SortByDate">Дата</a> }
+        else
+        { <a class="btn prd-btn sorting-btn" href="/Home/SortByDate">Дата</a>}
+        @if ((string)Session["sort"] == "price")
+        {<a class="btn prd-btn sorting-btn btn-active" href="/Home/SortByPrice">Цена</a> }
+        else
+        { <a class="btn prd-btn sorting-btn" href="/Home/SortByPrice">Цена</a>}
+        <a class="btn prd-btn sorting-btn" href="/Home/GetPDF">Скачать pdf</a>
+    </div>
+</div>
+<div class="product-grid" id="p-g">
+    @{int i = 0;}
+    @foreach (var item in Model.Where(n => n.IsDeleted == false))
+    {
+        <div class="product" id="@i" onclick="detailed()">
+            <div class="prd-first-child">
+                <button class="btn-close" onclick="detClose()">Close</button>
+                <h4 style="font-family: 'Franklin Gothic Medium', sans-serif">@item.Description</h4>
+                <h4 style="text-align:center">Пакеты:</h4>
+                @foreach (var type in item.Types)
+                {
+                    <div> - @type.TypeName</div>
+                    if (type.NumberChannels > 0)
+                    { <span>@type.NumberChannels ТВ каналов</span>}
+                    if (type.NumberHD > 0)
+                    { <span>из них @type.NumberHD HD</span>}
+                    if (type.Speed > 0)
+                    { <span>@type.Speed Мбит/с</span>}
+                    <div style="text-align:right">@type.DiscountPrice грн</div>
+                }
+                <strong><div>Цена тарифа @item.Price грн + безплатное подключение!</div></strong>
+                <a class="prd-btn to-cart-btn" onclick="addToCart(@item.Id)">Добавить в корзину</a>
+            </div>
+            <div class="prd-desc is-visible">
+                @if (item.Types.Count > 2)
+                {<div class="disc"><span>-15%</span><div style="font-size:13px">скидка</div></div> }
+                else
+                {
+                    if (item.Types.Count > 1)
+                    { <div class="disc"><span>-10%</span><div style="font-size:13px">скидка</div></div>}
+                }
+                <h2 style="color:#28bb9c">@item.ShortDesc</h2>
+                @{int j = 0;}
+                @foreach (var type in item.Types)
+                {
+                    if (type.Speed > 0 && j < 2)
+                    {<div class="tariff-info"><span class="number">@type.Speed</span><span> Мбит/с</span></div>}
+                    if (type.NumberChannels > 0 && j < 2)
+                    { <div class="tariff-info"><span class="number">@type.NumberChannels</span><span> каналов</span></div>}
+                    if (type.NumberHD > 0 && j < 2)
+                    { <div class="tariff-info"><span class="number">@type.NumberHD</span><span> HD</span></div>}
+                    j++;
+                }
+                <div class="price"><div>@item.Price грн</div><div>30 дн.</div></div>
+            </div>
+        </div>
+        i++;
+    }
+</div>
+<script>
+    new function () {
+        var i = 0;
+        function myLoop() {
+            setTimeout(() => {
+                changeTegClass(document.getElementById(i), "product loaded"); i++;
+                if (i < document.getElementsByClassName("product").length) myLoop();
+            }, 170)
+        } myLoop();
+    }
+</script>

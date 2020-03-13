@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Строка подключения в web.config, используемая приложением для доступа к базе данных." defaultValue="Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\I-Provider.mdf;Initial Catalog=I-Provider;Integrated Security=True" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="G:\\Университет\\EPAM\ курсы\\Финальное\ задание\\I-Provider\\I-Provider\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+  <parameter name="LogDb-Web.config Connection String" description="LogDb Строка подключения в web.config, используемая приложением для доступа к базе данных." defaultValue="Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\I-Provider_Log.mdf;Initial Catalog=I-Provider_Log;Integrated Security=True" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="G:\\Университет\\EPAM\ курсы\\Финальное\ задание\\I-Provider\\I-Provider\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='LogDb']/@connectionString" />
+  </parameter>
+</parameters>

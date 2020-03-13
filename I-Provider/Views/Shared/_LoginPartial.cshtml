@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNet.Identity
+@using I_Provider.DAL.Entities
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+            {
+                <li><a href="/Admin/Customers">Кабинет</a></li>
+            }
+            <li>
+                @if (User.IsInRole("Customer"))
+                { <a href="/Customer/Index" title="Customer">@User.Identity.GetUserName().Split('@')[0]</a> }
+                else { @Html.ActionLink(User.Identity.GetUserName().Split('@')[0], "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" }) }
+            </li>
+            <li><a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a></li>
+        </ul>
+    }
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Вход", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}
+<ul class="nav navbar-nav navbar-right">
+    <li>
+        <a href="/Cart/Cart">
+            <span class="glyphicon glyphicon-shopping-cart"></span> Корзина 
+            @if (Session["cart"] != null && (Session["cart"] as List<TariffPlan>).Count > 0)
+            { <sup class="number-item-cart" sup id="nmbItem">@((Session["cart"] as List<TariffPlan>).Count)</sup="number-item-cart"sup> }
+            else { <sup id="nmbItem"></sup> }
+        </a>
+    </li>
+</ul>

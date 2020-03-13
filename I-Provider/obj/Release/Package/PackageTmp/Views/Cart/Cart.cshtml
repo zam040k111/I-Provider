@@ -1,0 +1,44 @@
+﻿@using I_Provider.DAL.Entities
+@{
+    ViewBag.Title = "Корзина";
+}
+
+@if (Session["cart"] == null || (Session["cart"] as List<TariffPlan>).Count < 1)
+{
+    <h2>@ViewBag.Title пустая</h2>
+}
+else
+{
+    <h2>@ViewBag.Title</h2>
+    <hr />
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Краткое описание</th>
+                <th scope="col">Описание</th>
+                <th scope="col">Цена</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in (List<TariffPlan>)Session["cart"])
+            {
+
+                <tr>
+                    <td>@item.ShortDesc</td>
+                    <td>@item.Description</td>
+                    <td>@item.Price грн</td>
+                    <td><a href="/Cart/RemoveFromCart?id=@item.Id" class="prd-btn">Удалить из корзины</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        <strong>Всего:</strong> 
+        <span>@(((List<TariffPlan>)Session["cart"]).Sum(n => n.Price)) грн</span>
+        @if (!User.IsInRole("Admin") && !User.IsInRole("Manager"))
+        { <a class="prd-btn" href="/Customer/ChangeTariffPlan">Оформить</a> }
+        else { <a class="prd-btn"  onclick="return alert('Вы не можете сделать заказ. Вы авторизованы как Admin или как Manager')">Оформить</a> }
+    </div>
+}
+
+

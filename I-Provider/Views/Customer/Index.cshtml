@@ -1,0 +1,61 @@
+﻿@model I_Provider.DAL.Entities.Customer
+@{
+    ViewBag.Title = "Кабинет клиента";
+}
+<h2>Здравствуйте @User.Identity.Name.Split('@')[0]</h2>
+<hr />
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th scope="col">Имя</th>
+            <th scope="col">Адрес</th>
+            <th scope="col">Счет</th>
+            <th scope="col">Тарифы</th>
+            <th scope="col">Состояние</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.UserId.UserName</td>
+            <td>@Model.Address</td>
+            <td>@Model.Amount<span> грн | <a href="/Customer/ReplenishAccount">Пополнить</a></span></td>
+            <td>
+                @if (Model.Tariffs != null && Model.Tariffs.Count > 0)
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button"
+                                data-toggle="dropdown" aria-expanded="true">
+                            Тарифные планы <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            @foreach (var tariff in Model.Tariffs)
+                            {
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">
+                                        @if (tariff != null)
+                                        {<span>@tariff.ShortDesc, @tariff.Price грн</span>}
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <a href="/Customer/ChangeTariffPlan" onclick="return
+    confirm('При изменении тарифного плана старый тарифный план будет отключен и будут списаны средства согласно новому тарифу. Подтверждаете действие?')">Изменить</a>
+                    </div>
+                }
+                else
+                {
+                    <div> Нет | <a href="/Customer/ChangeTariffPlan"> Подключить </a></div>
+                }
+            </td>
+            <td>
+                @if (Model.IsBlocked)
+                {<span style="color:red" title="После пополнения счета ваш тариф будет разблокирован (Если тариф подключен)">Заблокирован</span>}
+                else
+                {<span>Обслуживается</span>}
+            </td>
+        </tr>
+    </tbody>
+</table>
+<a href="/Manage/Index" class="prd-btn">Настройки профиля</a>
+
+

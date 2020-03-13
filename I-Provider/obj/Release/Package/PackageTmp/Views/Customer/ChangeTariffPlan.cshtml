@@ -1,0 +1,53 @@
+﻿@using I_Provider.DAL.Entities
+@{
+    ViewBag.Title = "Редактор тарифного плана";
+}
+@using (Html.BeginForm("ChangeTariffPlan", "Customer", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <h2>Выберите тарифный план</h2>
+    @Html.AntiForgeryToken()
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th scope="col">Краткое описание</th>
+                <th scope="col">Описание</th>
+                <th scope="col">Цена</th>
+            </tr>
+        </thead>
+        @foreach (var item in ViewBag.TariffPlans)
+        {
+            <tbody>
+                <tr>
+                    <th scope="row">
+                        @if ((List<TariffPlan>)Session["cart"] != null && ((List<TariffPlan>)Session["cart"]).Count > 0)
+                        {<input type="checkbox" name="tariffPlansId" value="@item.Id" id="@item.Id"
+                                @(((List<TariffPlan>)Session["cart"]).Contains(item) ? "checked='checked'" : "") />}
+                        else
+                        {
+                            if (ViewBag.Customer.Tariffs.Count != null && ViewBag.Customer.Tariffs.Count > 0)
+                            { <input type="checkbox" name="tariffPlansId" value="@item.Id" id="@item.Id"
+                                     @(ViewBag.Customer.Tariffs.Contains(item) ? "checked='checked'" : "") /> }
+                            else
+                            { <input type="checkbox" name="tariffPlansId" value="@item.Id" id="@item.Id" />}
+                        }
+                    </th>
+                    <td>@item.ShortDesc</td>
+                    <td>@item.Description</td>
+                    <td>@item.Price</td>
+                </tr>
+            </tbody>
+        }
+    </table>
+    <input name="id" value="@ViewBag.Customer.Id" id="id" type="number" hidden />
+    if (ViewBag.Message != null)
+    {<div class="text-danger">@ViewBag.Message</div>}
+if ((List<TariffPlan>)Session["cart"] != null)
+{
+    <strong>Всего:</strong>
+    <span>@(((List<TariffPlan>)Session["cart"]).Sum(n => n.Price)) грн / месяц</span>
+}
+<input type="submit" class="prd-btn" value="Сохранить" />
+}
+
+

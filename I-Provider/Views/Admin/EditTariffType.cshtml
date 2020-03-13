@@ -1,0 +1,61 @@
+﻿@model I_Provider.Models.TariffTypeViewModel
+@{
+    ViewBag.Title = "Редактирование типа тарифа";
+}
+
+<ul class="nav nav-pills nav-justified">
+    <li role="presentation"><a href="/Admin/Customers">Список клиентов</a></li>
+    <li role="presentation"><a href="/Admin/TariffPlans">Список тарифов</a></li>
+    <li role="presentation"><a href="/Admin/TariffTypes">Список типов тарифов</a></li>
+    <li role="presentation"><a href="/Admin/AddNewCustomer">Добавить нового клиента</a></li>
+    @if (User.IsInRole("Manager")) { <li role="presentation"><a href="/Manager/Index">Журнал действий</a></li> }
+</ul>
+<h2>@ViewBag.Title</h2>
+<hr />
+@using (Html.BeginForm("EditTariffType", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <input name="id" value="@ViewBag.Id" id="id" type="number" hidden />
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.TypeName, "Название Типа", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.TypeName, new { @class = "form-control", required = "true" })
+            @Html.ValidationMessageFor(m => m.TypeName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.NumberChannels, "Количество ТВ каналов (если есть)", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NumberChannels, new { @class = "form-control", type = "number", min = 0 })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Speed, "Скорость интернета Мбит/с (если есть)", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Speed, new { @class = "form-control", type = "number", min = 0 })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.DiscountPrice, "Цена грн", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.DiscountPrice, new { @class = "form-control", type = "number", min = 0, required = "true" })
+            @Html.ValidationMessageFor(m => m.DiscountPrice, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.NumberHD, "Количество HD Каналов (если есть)", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.NumberHD, new { @class = "form-control", type = "number", min = 0 })
+            @Html.ValidationMessageFor(m => m.NumberHD, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Сохранить" />
+        </div>
+    </div>
+}
+
+

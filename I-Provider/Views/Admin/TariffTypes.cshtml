@@ -1,0 +1,79 @@
+﻿@model I_Provider.DAL.Entities.TariffType
+@{
+    ViewBag.Title = "Типы тарифных планов";
+}
+<ul class="nav nav-pills nav-justified">
+    <li role="presentation"><a href="/Admin/Customers">Список клиентов</a></li>
+    <li role="presentation"><a href="/Admin/TariffPlans">Список тарифов</a></li>
+    <li role="presentation" class="active"><a href="/Admin/TariffTypes">Список типов тарифов</a></li>
+    <li role="presentation"><a href="/Admin/AddNewCustomer">Добавить нового клиента</a></li>
+    @if (User.IsInRole("Manager")) { <li role="presentation"><a href="/Manager/Index">Журнал действий</a></li> }
+</ul>
+<h2>@ViewBag.Title<span class="pull-right">Добавить<a class="btn btn-primary glyphicon glyphicon-plus" href="/Admin/AddTariffType"></a></span></h2>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Название типа</th>
+            <th scope="col">Цена</th>
+            <th scope="col">Удален</th>
+            <th scope="col">Скорость интернета</th>
+            <th scope="col">Количество ТВ каналов</th>
+            <th scope="col">Из них HD каналов</th>
+            <th><input type="checkbox" name="value" onchange="HideDeletedTpEvent(this)" checked="@Session["hideDeleteType"]" /> Скрыть удаленные</th>
+        </tr>
+    </thead>
+    @foreach (var item in ViewBag.TariffTypes)
+    {
+        <tbody>
+            <tr>
+                <td>@item.TypeName</td>
+                <td>@item.DiscountPrice грн/мес</td>
+                <td>
+                    @if (!item.IsDeleted)
+                    {<span>Нет</span>}
+                    else
+                    {<span>Да</span>}
+            </td>
+            <td>
+                @if (item.Speed != 0)
+                {<span>@item.Speed Мбит/с</span>}
+            </td>
+            <td>
+                @if (item.NumberChannels != 0)
+                {<span>@item.NumberChannels</span>}
+            </td>
+            <td>
+                @if (item.NumberHD != 0)
+                {<span>@item.NumberHD</span>}
+            </td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle glyphicon glyphicon-option-horizontal" type="button"
+                            data-toggle="dropdown" aria-expanded="true">
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                        <li role="presentation"><a href="/Admin/EditTariffType?id=@item.Id">Редактировать</a></li>
+                        @if (!item.IsDeleted)
+                        {
+                            <li><a onclick="return confirm('Удалить?')" href="/Admin/SetIsDeletedType?id=@item.Id&value=true">Удалить</a></li>
+}
+                        else
+                        {
+                            <li><a onclick="return confirm('Восстановить?')" href="/Admin/SetIsDeletedType?id=@item.Id&value=false">Восстановить</a></li>
+                            <li><a onclick="return confirm('Удалить из базы?')" href="/Admin/DeleteType?id=@item.Id">Удалить из базы</a></li>
+}
+                    </ul>
+                </div>
+                @*<a href="/Admin/EditTariffType?id=@item.Id">Редактировать</a><span> | </span>
+                @if (!item.IsDeleted)
+                {<a onclick="return confirm('Удалить?')" href="/Admin/SetIsDeletedType?id=@item.Id&value=true">Удалить</a>}
+                else
+                {<a onclick="return confirm('Восстановить?')" href="/Admin/SetIsDeletedType?id=@item.Id&value=false">Восстановить</a><span> | </span>
+                 <a onclick="return confirm('Удалить из базы?')" href="/Admin/DeleteType?id=@item.Id">Удалить из базы</a>}*@
+            </td>
+        </tr>
+    </tbody>
+}
+</table>
+

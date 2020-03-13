@@ -1,0 +1,88 @@
+﻿@model I_Provider.BLL.Repositories.CustomerRepos
+@{
+    ViewBag.Title = "Admin";
+}
+<ul class="nav nav-pills nav-justified">
+    <li role="presentation" class="active"><a href="/Admin/Customers">Список клиентов</a></li>
+    <li role="presentation"><a href="/Admin/TariffPlans">Список тарифов</a></li>
+    <li role="presentation"><a href="/Admin/TariffTypes">Список типов тарифов</a></li>
+    <li role="presentation"><a href="/Admin/AddNewCustomer">Добавить нового клиента</a></li>
+    @if (User.IsInRole("Manager")) { <li role="presentation"><a href="/Manager/Index">Журнал действий</a></li> }
+</ul>
+<h2>Список клиентов<span class="pull-right">Добавить<a class="btn btn-primary glyphicon glyphicon-plus" href="/Admin/AddNewCustomer"></a></span></h2>
+<hr />
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Имя</th>
+            <th scope="col">Адрес</th>
+            <th scope="col">Номер мобильного</th>
+            <th scope="col">Счет</th>
+            <th scope="col">Тарифы</th>
+            <th scope="col">Состояние</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.GetAll())
+        {
+        <tr>
+            <th scope="row">@item.Id</th>
+            <td>@item.UserId.UserName</td>
+            <td>@item.Address</td>
+            <td>
+                @if (item.UserId.PhoneNumber != null)
+                {
+                    <span>
+                        @item.UserId.PhoneNumber |
+                        @if (!item.UserId.PhoneNumberConfirmed)
+                        {<span>Не</span>} подтвержден
+                    </span>
+                }
+                else
+                { <span>Нет</span>}
+            </td>
+            <td>@item.Amount<span> грн</span><span> | </span>
+            <a href="/Admin/ReplenishAccount?id=@item.Id" onclick="return confirm('Подтверждаете что клиент заплатил наличными?')">Пополнить</a>
+            </td>
+            <td>
+                @if (item.Tariffs != null && item.Tariffs.Count > 0)
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button"
+                                data-toggle="dropdown" aria-expanded="true">
+                            Тарифные планы <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            @foreach (var tariff in item.Tariffs)
+                            {
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="#">
+                                        @if (tariff != null)
+                                        {<span>@tariff.ShortDesc, @tariff.Price грн</span>}
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                        <a href="/Customer/ChangeTariffPlan?id=@item.Id" onclick="return
+    confirm('При изменении тарифного плана старый тарифный план будет отключен и будут списаны средства согласно новому тарифу. Подтверждаете действие?')">Изменить</a>
+                    </div>
+                }
+                else
+                {
+                    <div> Нет | <a href="/Customer/ChangeTariffPlan?id=@item.Id"> Подключить </a></div>
+                }
+            </td>
+            <td>
+                @if (item.IsBlocked)
+                {<span style="color:red">Заблокирован!</span><span> | </span><a onclick="unBlock(@item.Id)">Разблокировать</a>}
+                else
+                {<span>Обслуживается |</span><a href="/Admin/SetIsBlocked?id=@item.Id&value=true" onclick="return confirm('При разблокировке с пользователя будут списаны средства согласно тарифу. Заблокировать пользователя?')"> Заблокировать</a>}
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<a class="btn btn-primary" href="/Admin/ChargeOffAllCustomer" onclick=" return confirm('Снять месячную плату. Подтверждаете действие?')">Снять месячную плату</a>
+
+

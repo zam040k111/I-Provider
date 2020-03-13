@@ -1,0 +1,85 @@
+﻿@model I_Provider.Models.TariffPlanViewModel
+@{
+    ViewBag.Title = "Добавление тарифного плана";
+}
+<ul class="nav nav-pills nav-justified">
+    <li role="presentation"><a href="/Admin/Customers">Список клиентов</a></li>
+    <li role="presentation"><a href="/Admin/TariffPlans">Список тарифов</a></li>
+    <li role="presentation"><a href="/Admin/TariffTypes">Список типов тарифов</a></li>
+    <li role="presentation"><a href="/Admin/AddNewCustomer">Добавить нового клиента</a></li>
+    @if (User.IsInRole("Manager")) { <li role="presentation"><a href="/Manager/Index">Журнал действий</a></li> }
+</ul>
+@using (Html.BeginForm("AddTariffPlan", "Admin", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <h2>
+        @ViewBag.Title
+        @if (ViewBag.Customer != null)
+        {<span> пользователю @ViewBag.Customer.UserId.UserName</span>}
+    </h2>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.Description, "Описание", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Description, new { @class = "form-control", required = "true" })
+            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ShortDesc, "Краткое описание", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.ShortDesc, new { @class = "form-control", required = "true" })
+            @Html.ValidationMessageFor(m => m.ShortDesc, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <h4>Выберите типы тарифов</h4>
+        <hr />
+        <input name="userId" value="@ViewBag.UserId" id="userId" type="number" hidden />
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Название типа</th>
+                    <th scope="col">Цена</th>
+                    <th scope="col">Скорость интернета</th>
+                    <th scope="col">Количество ТВ каналов</th>
+                    <th scope="col">Из них HD каналов</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in ViewBag.TariffTypes)
+            {
+                <tbody>
+                    <tr>
+                        <th scope="row"><input type="checkbox" name="Types" value="@item.Id" id="@item.Id" /></th>
+                        <td>@item.TypeName</td>
+                        <td>@item.DiscountPrice грн/мес</td>
+                        <td>
+                            @if (@item.Speed != 0)
+                            {<span>@item.Speed Мбит/с</span>}
+                        </td>
+                        <td>
+                            @if (@item.NumberChannels != 0)
+                            {<span>@item.NumberChannels</span>}
+                        </td>
+                        <td>
+                            @if (@item.NumberHD != 0)
+                            {<span>@item.NumberHD</span>}
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+        @Html.HiddenFor(m => m.DiscWillEnd)
+        @Html.ValidationMessageFor(m => m.DiscWillEnd, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Сохранить" />
+        </div>
+    </div>
+}
+

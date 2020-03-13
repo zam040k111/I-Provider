@@ -1,0 +1,31 @@
+﻿@model I_Provider.Models.ReplenishViewModel
+@{
+    ViewBag.Title = "Пополнение счета";
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+@using (Html.BeginForm("ReplenishAccount", "Customer", "", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        @Html.LabelFor(n => n.Amount, "Сумма пополнения", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(n => n.Amount, new { @class = "form-control", type = "number", min = "10", required = "true", placeholder = "Amount" })
+            @Html.ValidationMessageFor(n => n.Amount, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(n => n.Card, "Кредитная карта", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(n => n.Card, new { @class = "form-control", type = "number", required = "true", placeholder = "Card Number" })
+            @Html.ValidationMessageFor(n => n.Card, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Пополнить" class="btn btn-default" />
+        </div>
+    </div>
+}
+

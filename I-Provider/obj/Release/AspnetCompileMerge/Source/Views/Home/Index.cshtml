@@ -1,0 +1,52 @@
+﻿@using I_Provider.DAL.Entities
+@model System.Collections.Generic.IEnumerable<TariffPlan>
+@{
+    ViewBag.Title = "I-Provider";
+}
+
+@foreach (var item in Model.Where(n => n.IsDeleted == false))
+{
+}
+    <div id="prd" class="product main @*animated rollIn*@">
+        <h1 class="glyphicon glyphicon-menu-up animated fadeInUp infinite" style="color:#28bb9c; left:95px; top:-25px"></h1>
+        <h1 style="color:#28bb9c; left:65px; top:20px; position:absolute">Больше</h1>
+        <div id="disc-nav" style="position:absolute">500 Mбит</div>
+        <div style="margin-top:120px">
+            <h2 style="left:100px; position:relative; font-size:40px">- Доступные цены</h2>
+            <h2 style="left:100px; position:relative; font-size:40px">- Выгодные тарифы</h2>
+            <h2 style="left:100px; position:relative; font-size:40px">- Высокая скорость интернета</h2>
+            <h2 style="left:100px; position:relative; font-size:40px">- Скидки до 15%</h2>
+            <h2 style="left:100px; position:relative; font-size:40px">- Безплатное подключение</h2>
+        </div>
+        <div class="area">
+            <ul class="circles">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+@*<script>
+    new function () {
+        var i = 0;
+        let delay = 5000;
+        function myLoop() {
+            setTimeout(() => {
+                if (document.getElementById('prd').className == "product main animated rollIn") {
+                    changeTegClass(document.getElementById('prd'), "product main animated rollOut");
+                    delay = 500;
+                }
+                else { changeTegClass(document.getElementById('prd'), "product main animated rollIn"); delay = 5000; }
+                i++;
+                if (i < 250) myLoop();
+            }, delay)
+        } myLoop();
+    }
+</script>*@

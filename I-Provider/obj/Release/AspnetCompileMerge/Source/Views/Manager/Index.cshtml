@@ -1,0 +1,104 @@
+﻿@using I_Provider.App_Code
+@model I_Provider.Models.LogViewModels
+@{
+    ViewBag.Title = "Журнал действий";
+}
+
+<ul class="nav nav-pills nav-justified">
+    <li role="presentation"><a href="/Admin/Customers">Список клиентов</a></li>
+    <li role="presentation"><a href="/Admin/TariffPlans">Список тарифов</a></li>
+    <li role="presentation"><a href="/Admin/TariffTypes">Список типов тарифов</a></li>
+    <li role="presentation"><a href="/Admin/AddNewCustomer">Добавить нового клиента</a></li>
+    @if (User.IsInRole("Manager"))
+    {
+        <li role="presentation" class="active"><a href="/Manager/Index">Журнал действий</a></li>
+    }
+</ul>
+<h2>@ViewBag.Title</h2>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">
+                @if ((string)Session["logSort"] == null)
+                { <a class="btn btn-primary" href="/Manager/SortBy">ID <span class="caret"></span></a> }
+                else { <a class="btn btn-default" href="/Manager/SortBy">ID</a> }
+            </th>
+            <th scope="col">
+                @if ((string)Session["logSort"] == "UserName")
+                { <a class="btn btn-primary" href="/Manager/SortBy?sortBy=UserName">Пользователь <span class="caret"></span></a> }
+                else { <a class="btn btn-default" href="/Manager/SortBy?sortBy=UserName">Пользователь</a> }
+            </th>
+            <th scope="col">
+                @if ((string)Session["logSort"] == "IP")
+                { <a class="btn btn-primary" href="/Manager/SortBy?sortBy=IP">IP адрес <span class="caret"></span></a> }
+                else { <a class="btn btn-default" href="/Manager/SortBy?sortBy=IP">IP адрес</a> }
+            </th>
+            <th scope="col">
+                @if ((string)Session["logSort"] == "Time")
+                { <a class="btn btn-primary" href="/Manager/SortBy?sortBy=Time">Дата/время <span class="caret"></span></a> }
+                else { <a class="btn btn-default" href="/Manager/SortBy?sortBy=Time">Дата/время</a> }
+            </th>
+            <th scope="col">
+                @if ((string)Session["logSort"] == "Controller")
+                {<a class="btn btn-primary" href="/Manager/SortBy?sortBy=Controller">Контроллер <span class="caret"></span></a> }
+                else { <a class="btn btn-default" href="/Manager/SortBy?sortBy=Controller">Контроллер</a>}
+            </th>
+            <th scope="col">
+                @if ((string)Session["logSort"] == "Action")
+                {<a class="btn btn-primary" href="/Manager/SortBy?sortBy=Action">Действие <span class="caret"></span></a> }
+                else { <a class="btn btn-default" href="/Manager/SortBy?sortBy=Action">Действие</a>}
+            </th>
+            <th scope="col">
+                @if ((string)Session["logSort"] == "Field")
+                {<a class="btn btn-primary" href="/Manager/SortBy?sortBy=Field">Поле <span class="caret"></span></a> }
+                else { <a class="btn btn-default" href="/Manager/SortBy?sortBy=Field">Поле</a>}
+            </th>
+            <th scope="col">
+                @if ((string)Session["logSort"] == "Value")
+                {<a class="btn btn-primary" href="/Manager/SortBy?sortBy=Value">Значение <span class="caret"></span></a> }
+                else { <a class="btn btn-default" href="/Manager/SortBy?sortBy=Value">Значение</a>}
+            </th>
+            <th scope="col">
+                @if ((string)Session["logSort"] == "Number")
+                {<a class="btn btn-primary" href="/Manager/SortBy?sortBy=Number">Кол-во действий <span class="caret"></span></a> }
+                else { <a class="btn btn-default" href="/Manager/SortBy?sortBy=Number">Кол-во действий</a>}
+            </th>
+        </tr>
+    </thead>
+    @foreach (var item in Model.Logs.TakeWhile(n => n.Id < 1000))
+    {
+        <tbody>
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.UserName.Split('@')[0]</td>
+                <td>@item.IP</td>
+                <td>@item.Time</td>
+                <td>@item.Controller</td>
+                <td>@item.Action</td>
+                @if (!string.IsNullOrEmpty(item.Field))
+                {
+                    <td title="@item.Field">@item.Field.Substring(0, Math.Min(item.Field.Length, 20))</td>
+                }
+                else
+                {
+                    <td>@item.Field</td>
+                }
+                @if (!string.IsNullOrEmpty(item.Value))
+                {
+                    <td title="@item.Value">@item.Value.Substring(0, Math.Min(item.Value.Length, 20))</td>
+                }
+                else
+                {
+                    <td>@item.Value</td>
+                }
+                <td>@item.Number</td>
+            </tr>
+        </tbody>
+    }
+</table>
+<br />
+<span class="btn-group">
+    @Html.PageLinks(Model.PageInfo, x => Url.Action("Index", new { page = x }))
+</span>
+
